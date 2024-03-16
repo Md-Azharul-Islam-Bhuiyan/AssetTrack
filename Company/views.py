@@ -12,17 +12,24 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login, logout
 
+
+# Define for user registration.
 class RegistrationView(APIView):
     serializer_class = RegistrationSerializer
-
+     # Define the POST method to handle user registration.
     def post(self, request):
         try:
+             # Create a serializer instance with the request data.
             serializer = self.serializer_class(data=request.data)
             
+            # Check if the serializer data is valid.
             if serializer.is_valid():
                 user = serializer.save()
+                # Generate a token for email confirmation.
                 token = default_token_generator.make_token(user)
+                # Encode the user's primary key
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
+
                 confirm_link = f"http://127.0.0.1:8000/company/active/{uid}/{token}"
 
                 email_subject = "Confirm Your Email"
@@ -92,7 +99,7 @@ class LoginView(APIView):
     
 
 class LogoutView(APIView):
-
+    
     def get(self, request):
         request.user.auth_token.delete()
         logout(request)

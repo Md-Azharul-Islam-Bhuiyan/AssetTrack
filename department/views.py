@@ -4,6 +4,7 @@ from .serializers import DepartmentSerializer
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+
 class DepartmentView(viewsets.ModelViewSet):
     
     queryset = Department.objects.all() #Find all objects of the department
